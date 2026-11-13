@@ -2,6 +2,7 @@ const form = document.getElementById('todo-form');
 const input = document.getElementById('todo-input');
 const list = document.getElementById('todo-list');
 const remaining = document.getElementById('remaining');
+const copyBtn = document.getElementById('copy-btn');
 
 let todos = [];
 try {
@@ -64,6 +65,48 @@ function deleteTodo(id) {
   render();
 }
 
+// 할 일 목록을 "[ ] 내용" / "[x] 내용" 형태의 텍스트로 만든다
+function todosToText() {
+  return todos.map((t) => `[${t.done ? 'x' : ' '}] ${t.text}`).join('\n');
+}
+
+// 클립보드 API를 못 쓰는 환경을 위한 대체 복사 방법
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  const ok = document.execCommand('copy');
+  ta.remove();
+  return ok;
+}
+
+async function copyTodos() {
+  if (!todos.length) {
+    showCopyResult('복사할 할 일이 없어요');
+    return;
+  }
+  const text = todosToText();
+  let ok = false;
+  try {
+    await navigator.clipboard.writeText(text);
+    ok = true;
+  } catch (e) {
+    ok = fallbackCopy(text);
+  }
+  showCopyResult(ok ? '복사됨!' : '복사 실패');
+}
+
+let copyTimer;
+function showCopyResult(message) {
+  copyBtn.textContent = message;
+  clearTimeout(copyTimer);
+  copyTimer = setTimeout(() => (copyBtn.textContent = '목록 복사'), 1500);
+}
+
+copyBtn.addEventListener('click', copyTodos);
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();

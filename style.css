@@ -66,4 +66,22 @@ h1 { margin: 0 0 16px; font-size: 1.5rem; color: #7ed957; }
   cursor: pointer;
 }
 
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+}
+
 .remaining { margin: 0; color: #555; font-size: 0.95rem; }
+
+.copy-btn {
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.copy-btn:hover { background: #f0f2f5; }
